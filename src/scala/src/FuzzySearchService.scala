@@ -1,4 +1,4 @@
-import scala.collection.mutable.Map
+import collection.mutable.{ArrayBuffer, Map}
 
 class FuzzySearchService(wordsToIndex: List[String]){
   require(wordsToIndex != null)
@@ -31,7 +31,7 @@ class FuzzySearchService(wordsToIndex: List[String]){
   }
 
   private def soundex(data: String) : String = {
-    var result : Array[Char] = Array[Char]()
+    var result : ArrayBuffer[Char] = ArrayBuffer[Char]()
 
     if (data != null && data.length() > 0){
       var previousCode : Char = Char.MinValue
@@ -39,27 +39,25 @@ class FuzzySearchService(wordsToIndex: List[String]){
 
       val charArray : Array[Char] = data.toCharArray
 
-      result :+  data.charAt(0)
+      result +=  data.charAt(0).toUpper
 
       for (index <- 1 to charArray.length - 1){
         currentCode = encodeChar(charArray(index))
 
         if (currentCode != previousCode)
-          result :+ currentCode
+          result += currentCode
 
         if (result.length == 4)
-           return result.toString
+           return result.toString()
 
         if (currentCode != '\0')
           previousCode = currentCode
 
       }
 
-      for (i <- data.length to 4){
-        result :+ "0"
-      }
     }
-    return result.toString
+    var resultString = String.format("%s04", result.toString())
+    return result.toString()
   }
 
 
