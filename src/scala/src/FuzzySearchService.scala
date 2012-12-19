@@ -26,7 +26,6 @@ class FuzzySearchService(wordsToIndex: List[String]){
       case 'n' => '5'
       case 'r' => '6'
       case _ => 0
-
     }
   }
 
@@ -54,7 +53,10 @@ class FuzzySearchService(wordsToIndex: List[String]){
       result +=  data.charAt(0).toUpper
 
       for (index <- 1 to charArray.length - 1){
-        currentCode = encodeChar(charArray(index).toLower)
+        val encodedChar: Char = encodeChar(charArray(index).toLower)
+        if (encodedChar != 0)
+          currentCode = encodedChar
+
 
         if (currentCode != previousCode)
           result += currentCode
@@ -62,7 +64,7 @@ class FuzzySearchService(wordsToIndex: List[String]){
         if (result.length == 4)
            return result.toString()
 
-        if (currentCode != '\0')
+        if (currentCode != 0)
           previousCode = currentCode
       }
     }

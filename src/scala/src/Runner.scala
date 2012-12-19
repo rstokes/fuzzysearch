@@ -3,6 +3,10 @@ object Runner {
     var list : List[String] = List()
 
     list ::= "FEstival"
+    list ::= "China"
+    list ::= "canada"
+    list ::= "mexico"
+    list ::= "florida"
 
 
     var inst = new FuzzySearchService(list)
