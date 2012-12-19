@@ -1,4 +1,4 @@
-import collection.mutable.{ArrayBuffer, Map}
+import collection.mutable.Map
 
 class FuzzySearchService(wordsToIndex: List[String]){
   require(wordsToIndex != null)
@@ -25,15 +25,27 @@ class FuzzySearchService(wordsToIndex: List[String]){
       case 'm' => '5'
       case 'n' => '5'
       case 'r' => '6'
-      case _ => '\0'
+      case _ => 0
 
     }
   }
 
-  private def soundex(data: String) : String = {
-    var result : ArrayBuffer[Char] = ArrayBuffer[Char]()
+  //TODO: This can probably be done better in an inline fashion
+  private def padSoundex(value: StringBuilder) : StringBuilder ={
+    var result : StringBuilder = value
+    if (result.length != 4)
+    {
+      if (result.length == 1) result = result + '0' + '0' + '0'
+      else if (result.length == 2) result = result + '0' + '0'
+      else if (result.length == 3) result = result + '0'
+    }
+    result
+  }
 
-    if (data != null && data.length() > 0){
+  private def soundex(data: String) : String = {
+    var result : StringBuilder = new StringBuilder(4)
+
+    if (data != null && data.length() > 0) {
       var previousCode : Char = Char.MinValue
       var currentCode : Char = Char.MinValue
 
@@ -42,7 +54,7 @@ class FuzzySearchService(wordsToIndex: List[String]){
       result +=  data.charAt(0).toUpper
 
       for (index <- 1 to charArray.length - 1){
-        currentCode = encodeChar(charArray(index))
+        currentCode = encodeChar(charArray(index).toLower)
 
         if (currentCode != previousCode)
           result += currentCode
@@ -52,12 +64,9 @@ class FuzzySearchService(wordsToIndex: List[String]){
 
         if (currentCode != '\0')
           previousCode = currentCode
-
       }
-
     }
-    var resultString = String.format("%s04", result.toString())
-    return result.toString()
+    padSoundex(result).toString()
   }
 
 
@@ -66,6 +75,7 @@ class FuzzySearchService(wordsToIndex: List[String]){
 
     for (word <- wordsToIndex){
       var toIndex : String = soundex(word)
+
       println("Indexing value: " + toIndex)
     }
     indexToBuild
