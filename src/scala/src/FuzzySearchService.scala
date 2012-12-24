@@ -71,15 +71,13 @@ class FuzzySearchService(wordsToIndex: List[String]){
     padSoundex(result).toString()
   }
 
-
-  def init(wordsToIndex: List[String]) : Map[String, String] = {
-    var indexToBuild = Map[String, String]()
+  private def init(wordsToIndex: List[String]) : Map[String, String] = {
+    val indexToBuild = Map[String, String]()
 
     for (word <- wordsToIndex){
-      var toIndex : String = soundex(word)
-
-      println("Indexing value: " + toIndex)
+      word.split(" ").foreach(s => indexToBuild += soundex(s) -> word)
     }
+    println(indexToBuild)
     indexToBuild
   }
 }

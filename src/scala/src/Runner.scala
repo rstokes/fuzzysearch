@@ -2,7 +2,7 @@ object Runner {
   def main(args: Array[String]) {
     var list : List[String] = List()
 
-    list ::= "FEstival"
+    list ::= "FEstival Tentman"
     list ::= "China"
     list ::= "canada"
     list ::= "mexico"
