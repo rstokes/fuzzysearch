@@ -1,22 +1,25 @@
+import collection.mutable.ListBuffer
+import scala.io.Source
+
 object Runner {
   def main(args: Array[String]) {
-    var list : List[String] = List()
+    val list: ListBuffer[String] = ListBuffer()
 
-    list ::= "FEstival Tentman"
-    list ::= "festival Shimmer"
-
+    val s = Source.fromFile("/Users/rob/Desktop/Vendors.txt")
+    val lines = s.getLines()
+    for (line <- lines){
+      list.append(line)
+    }
 
     var startTime = System.currentTimeMillis()
-
-    val inst = new FuzzySearchService(list)
+    val inst = new FuzzySearchService(list.toList)
     println(String.format("Initialization took: %s ms", (java.lang.System.currentTimeMillis() - startTime).toString))
 
-    startTime = System.currentTimeMillis()
-    val res = inst.search("Festival")
-    println(String.format("Search took: %s ms", (System.currentTimeMillis() - startTime).toString))
-
-
-    println(res)
-    val a = 3
+    while(true){
+      val line = readLine()
+      startTime = System.currentTimeMillis()
+      println(String.format("Search took: %s ms", (System.currentTimeMillis() - startTime).toString))
+      inst.search(line).sortBy(- _.score).foreach(result => println(result.toString()))
+    }
   }
 }

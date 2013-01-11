@@ -1,11 +1,10 @@
 import collection.mutable
-import collection.mutable.Map
-import collection.mutable.HashSet
+import collection.mutable.{ListBuffer, Map, HashSet}
 
 class FuzzySearchService(wordsToIndex: List[String]){
   require(wordsToIndex != null)
 
-  private val index: Map[String, Array[String]] = this.init(wordsToIndex)
+  private val index: Map[String, List[String]] = this.init(wordsToIndex)
 
   private def encodeChar(value: Char) : Char = {
     value match{
@@ -32,7 +31,7 @@ class FuzzySearchService(wordsToIndex: List[String]){
   }
 
   //TODO: This can probably be done better in an inline fashion
-  private def padSoundex(value: StringBuilder) : StringBuilder ={
+  private def padSoundex(value: StringBuilder) : StringBuilder = {
     var result : StringBuilder = value
     if (result.length != 4)
     {
@@ -59,7 +58,6 @@ class FuzzySearchService(wordsToIndex: List[String]){
         if (encodedChar != 0)
           currentCode = encodedChar
 
-
         if (currentCode != previousCode)
           result += currentCode
 
@@ -73,27 +71,25 @@ class FuzzySearchService(wordsToIndex: List[String]){
     padSoundex(result).toString()
   }
 
-  private def init(phrasesToIndex: List[String]) : Map[String, Array[String]] = {
-    val indexToBuild = Map[String, Array[String]]()
+  private def init(phrasesToIndex: List[String]) : Map[String, List[String]] = {
+    val indexToBuild = Map[String, List[String]]()
 
     for (phrase <- phrasesToIndex){
       val words = phrase.split(" ")
       for (word <- words){
         val hash = soundex(word)
         if (indexToBuild.contains(hash)){
-          indexToBuild.get(hash) +: phrase
+          //val value: List[String] = indexToBuild.get(hash).get
+          indexToBuild += hash -> (phrase :: indexToBuild.get(hash).get).toList
         }else {
-          indexToBuild += hash -> Array(phrase)
+          indexToBuild += hash -> List(phrase)
         }
       }
     }
-    println(indexToBuild)
+    //println(indexToBuild)
     indexToBuild
   }
 
-  private def score(input1: String, input2: String) : Double = {
-    return diceCoefficient(input1, input2) * 100
-  }
 
   private def diceCoefficient(input1: String, input2: String) : Double = {
     val set1: HashSet[String] = HashSet()
@@ -113,21 +109,22 @@ class FuzzySearchService(wordsToIndex: List[String]){
     }
 
     val intersection : HashSet[String] = set1.intersect(set1)
-    return (intersection.size * 2D)/(set1.size + set2.size)
+    (intersection.size * 2D)/(set1.size + set2.size)
   }
 
+  def search(input: String) : List[Result] = {
+    val result: ListBuffer[Result] = ListBuffer()
 
-
-  def search(input: String) : List[(String, String, Double)] = {
-     var result : List[(String, String, Double)] = List()
-
-    for (valueToSearch <- input.split(" ")){
-      val valuesFromIndex = index.get(soundex(valueToSearch)).get
+    for (valuesToSearch <- input.split(" ")){
+      val valuesFromIndex = index.get(soundex(valuesToSearch)).get.toSet
       for (value <- valuesFromIndex){
-        result ::= (input, value, score(input, value))
+        result.append(new Result(input, value, score(input, value)))
       }
     }
+    result.toList
+  }
 
-    return result
+  private def score(input1: String, input2: String) : Double = {
+    diceCoefficient(input1, input2) * 100
   }
 }
