@@ -18,8 +18,9 @@ object Runner {
     while(true){
       val line = readLine()
       startTime = System.currentTimeMillis()
+      val results = inst.search(line).sortBy(- _.score)
       println(String.format("Search took: %s ms", (System.currentTimeMillis() - startTime).toString))
-      inst.search(line).sortBy(- _.score).foreach(result => println(result.toString()))
+      results.foreach(result => println(result.toString()))
     }
   }
 }

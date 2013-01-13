@@ -116,9 +116,12 @@ class FuzzySearchService(wordsToIndex: List[String]){
     val result: ListBuffer[Result] = ListBuffer()
 
     for (valuesToSearch <- input.split(" ")){
-      val valuesFromIndex = index.get(soundex(valuesToSearch)).get.toSet
-      for (value <- valuesFromIndex){
-        result.append(new Result(input, value, score(input, value)))
+      val valuesFromIndex = index.get(soundex(valuesToSearch))
+      if(valuesFromIndex != None){
+        val results = valuesFromIndex.get.toSet
+        for (value <- results){
+          result.append(new Result(input, value, score(input, value)))
+        }
       }
     }
     result.toList
