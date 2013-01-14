@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="FuzzySearch:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/FuzzySearch_jar</output-path>
+    <root id="archive" name="FuzzySearch.jar">
+      <element id="module-output" name="FuzzySearch" />
+      <element id="extracted-dir" path="$USER_HOME$/Library/Scala2.10.0/lib/scala-library.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Library/Scala2.10.0/lib/scala-swing.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/Library/Scala2.10.0/lib/scala-actors.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

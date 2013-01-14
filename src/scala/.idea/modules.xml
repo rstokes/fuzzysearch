@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FuzzySearchService.iml" filepath="$PROJECT_DIR$/FuzzySearchService.iml" />
+      <module fileurl="file://$PROJECT_DIR$/FuzzySearch.iml" filepath="$PROJECT_DIR$/FuzzySearch.iml" />
     </modules>
   </component>
 </project>
