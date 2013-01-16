@@ -107,6 +107,11 @@ class FuzzySearchService(wordsToIndex: List[String]){
   }
 
   private def score(input1: String, input2: String) : Double = {
+    if(input1.length < 2 || input2.length < 2)
+    {
+      if (input1 == input2) return 100
+      else return 0
+    }
     diceCoefficient(input1.toLowerCase, input2.toLowerCase) * 100
   }
 
@@ -128,7 +133,7 @@ class FuzzySearchService(wordsToIndex: List[String]){
     }
 
     val intersection : HashSet[String] = set1.intersect(set2)
-    (intersection.size * 2.0)/(set1.size + set2.size)
+    (intersection.size * 2D)/(set1.size + set2.size)
   }
 
 }
