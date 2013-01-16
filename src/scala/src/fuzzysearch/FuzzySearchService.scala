@@ -91,28 +91,6 @@ class FuzzySearchService(wordsToIndex: List[String]){
     indexToBuild
   }
 
-
-  private def diceCoefficient(input1: String, input2: String) : Double = {
-    val set1: HashSet[String] = HashSet()
-    val set2: HashSet[String] = HashSet()
-
-    for(index <- 0 to input1.length - 1){
-      val x1: Char = input1(index)
-      val x2: Char = input1(index)
-      val tmp: String = new String(Array(x1, x2))
-      set1.add(tmp)
-    }
-    for(index <- 0 to input2.length - 1){
-      val x1: Char = input2(index)
-      val x2: Char = input2(index)
-      val tmp: String = new String(Array(x1, x2))
-      set2.add(tmp)
-    }
-
-    val intersection : HashSet[String] = set1.intersect(set1)
-    (intersection.size * 2D)/(set1.size + set2.size)
-  }
-
   def search(input: String) : List[Result] = {
     val result: ListBuffer[Result] = ListBuffer()
 
@@ -129,8 +107,30 @@ class FuzzySearchService(wordsToIndex: List[String]){
   }
 
   private def score(input1: String, input2: String) : Double = {
-    diceCoefficient(input1, input2) * 100
+    diceCoefficient(input1.toLowerCase, input2.toLowerCase) * 100
   }
+
+  private def diceCoefficient(input1: String, input2: String) : Double = {
+    val set1: HashSet[String] = HashSet()
+    val set2: HashSet[String] = HashSet()
+
+    for(index <- 0 to input1.length - 2){
+      val x1: Char = input1(index)
+      val x2: Char = input1(index + 1)
+      val tmp: String = new String(Array(x1, x2))
+      set1.add(tmp)
+    }
+    for(index <- 0 to input2.length - 2){
+      val x1: Char = input2(index)
+      val x2: Char = input2(index + 1)
+      val tmp: String = new String(Array(x1, x2))
+      set2.add(tmp)
+    }
+
+    val intersection : HashSet[String] = set1.intersect(set2)
+    (intersection.size * 2.0)/(set1.size + set2.size)
+  }
+
 }
 
 case class Result(search: String, result: String, score: Double) {
