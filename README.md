@@ -1,4 +1,4 @@
-fuzzysearch
+Fuzzy Search
 ===========
 
 Fuzzy String Searching
