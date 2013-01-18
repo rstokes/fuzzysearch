@@ -24,3 +24,8 @@ object Run {
   }
 }
 ```
+Results:
+```
+Searched: succesful politician Result: Successful Beach Score: 52.94117647058824
+Searched: succesful politician Result: Virginia Politican Score: 50.0
+```
