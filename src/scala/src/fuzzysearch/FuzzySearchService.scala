@@ -1,6 +1,6 @@
 package fuzzysearch
 
-import collection.mutable.{ListBuffer, Map, HashSet}
+import collection.mutable.{ListBuffer, Map, HashSet, Set}
 
 class FuzzySearchService(wordsToIndex: List[String]){
   require(wordsToIndex != null)
@@ -92,14 +92,14 @@ class FuzzySearchService(wordsToIndex: List[String]){
   }
 
   def search(input: String) : List[Result] = {
-    val result: ListBuffer[Result] = ListBuffer()
+    val result: Set[Result] =  Set()
 
     for (valuesToSearch <- input.split(" ")){
       val valuesFromIndex = index.get(soundex(valuesToSearch))
       if(valuesFromIndex != None){
         val results = valuesFromIndex.get.toSet
         for (value <- results){
-          result.append(new Result(input, value, score(input, value)))
+          result.add(new Result(input, value, score(input, value)))
         }
       }
     }
