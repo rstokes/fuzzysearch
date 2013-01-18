@@ -8,7 +8,7 @@ object Runner {
     val list: ListBuffer[String] = ListBuffer()
 
 
-    val s = Source.fromFile("/Users/rob/Desktop/movies.txt")
+    val s = Source.fromFile("./movies.txt")
     val lines = s.getLines()
     for (line <- lines){
       list.append(line)
