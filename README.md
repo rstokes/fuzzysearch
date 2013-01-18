@@ -3,12 +3,12 @@ fuzzysearch
 
 Fuzzy String Searching
 
-The service takes a list of strings and indexes them by each word.  The Search method takes a string and does a lookup
+The service takes a list of strings, up to more than 10,000, and indexes them by each word.  The Search method takes a string and does a lookup
 by each word in the string.  The results are then scored using Dice's coefficient.
 
-There is a .net implementation in C# and a jvm implementation in Scala.
+There is a .net implementation in C# and a jvm implementation in Scala.  The binaries are available in the bin folder.
 
-
+Simple example usage in scala:
 ```scala
 import fuzzysearch._
 
