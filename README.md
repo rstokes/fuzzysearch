@@ -29,3 +29,46 @@ Results:
 Searched: succesful politician Result: Successful Beach Score: 52.94117647058824
 Searched: succesful politician Result: Virginia Politican Score: 50.0
 ```
+
+Simple example using C#:
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using FuzzySearch;
+
+namespace Run
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var ItemsToIndex = new List<string>()
+                {
+                    "Successful Beach",
+                    "Virginia Politican",
+                    "South Beach",
+                    "Grand Cayman",
+                    "Caymon Brac"
+                };
+
+            var FuzzyService = new FuzzySearchService(ItemsToIndex);
+
+            var Results = FuzzyService.Search("succesful politician").OrderByDescending(r => r.Score);
+
+            foreach (var result in Results)
+            {
+                Console.WriteLine(result);
+            }
+
+            Console.ReadKey();
+        }
+    }
+}
+
+```
+Results:
+```
+Searched: succesful politician, Result: Successful Beach, Score: 52.9411764705882
+Searched: succesful politician, Result: Virginia Politican, Score: 50
+```
