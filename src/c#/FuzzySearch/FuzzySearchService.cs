@@ -108,7 +108,7 @@ namespace FuzzySearch
 
         public IEnumerable<Result> Search(string inputToSearch)
         {
-            List<Result> results = new List<Result>();
+            var results = new HashSet<Result>();
             foreach (var input in ParseValue(inputToSearch))
             {
                 List<string> valuesFromIndex;
