@@ -20,7 +20,6 @@ int main(int argc, const char * argv[])
         inputs.push_back(line);
     }
     
-    
     clock_t startTime = clock();
     FuzzySearchService *service = new FuzzySearchService(inputs);
     cout << "Indexed data in: " << double( clock() - startTime ) / (double)CLOCKS_PER_SEC << "s" << endl;

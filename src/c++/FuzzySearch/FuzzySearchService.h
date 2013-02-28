@@ -13,31 +13,12 @@
 #include <algorithm>
 #include <sstream>
 #include <functional>
-#include <cctype>
 #include <locale>
 
 using namespace std;
 
 #ifndef FuzzySearch_FuzzySearch_h
 #define FuzzySearch_FuzzySearch_h
-
-// trim from start
-static inline std::string &ltrim(std::string &s) {
-    s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
-    return s;
-}
-
-// trim from end
-static inline std::string &rtrim(std::string &s) {
-    s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
-    return s;
-}
-
-// trim from both ends
-static inline std::string &trim(std::string &s) {
-    return ltrim(rtrim(s));
-}
-
 
 class Result{
 private:
@@ -79,11 +60,11 @@ public:
     
     set<Result> search(string value){
         set<Result> results;
-        vector<string> valuesToSearch = splitStringToWords(value);
+        vector<string> valuesToSearch = splitStringToWords(removeNonAlphaNumerics(value));
         for(int i = 0; i < valuesToSearch.size(); i++){
             string word = valuesToSearch[i];
             string hash = soundex(word);
-            //cout << hash << " " << word << endl;
+            cout << hash << " " << word << endl;
             vector<string> valuesFromIndex = index[hash];
             for (int j = 0; j < valuesFromIndex.size(); j++) {
                 results.insert(*new Result(score(value, valuesFromIndex[j]), value, valuesFromIndex[j]));
@@ -172,7 +153,7 @@ private:
     string removeNonAlphaNumerics(string value){
         string result = value;
         for (size_t i = 0; i < result.length(); ++i)
-            if (!isalnum(result[i]) || result[i] != ' ' || result[i] == '(' || result[i] == ')')
+            if (!isalnum(result[i]) || result[i] != ' ' || result[i] == '(' || result[i] == ')' ||result[i] == '"')
                 result.erase(i, 1);
         
         return result;
@@ -186,20 +167,19 @@ private:
             //make everything lowercase
             transform(inputs[i].begin(), inputs[i].end(), inputs[i].begin(), ::tolower);
             
-            
             //split into words
             vector<string> words = splitStringToWords(removeNonAlphaNumerics(inputs[i]));
             for (int x = 0; x < words.size(); x++) {
-                string word = trim(words[x]);
+                string word = words[x];
                 string hash = soundex(word);
                 if(indexToBuild.count(hash) == 0){
-                    cout << "new " << hash << ": " << word << endl;
+                    //cout << "new " << hash << ": " << word << endl;
                     vector<string> value;
                     value.push_back(currentInput);
                     indexToBuild[hash] = value;
                 }
                 else{
-                    cout << "old " << hash << ": " << word << endl;
+                    //cout << "old " << hash << ": " << word << endl;
                     map<string, vector<string> >::iterator vals;   
                     vals = indexToBuild.find(hash);
                     vals->second.push_back(currentInput);
@@ -210,7 +190,8 @@ private:
     }
     
     vector<string> splitStringToWords(string value){
-        stringstream ss(value);
+        string result = value;
+        stringstream ss(result);
         istream_iterator<string> begin(ss);
         istream_iterator<string> end;
         vector<string> vstrings(begin, end);
@@ -220,6 +201,7 @@ private:
     float score(string val1, string val2){
         transform(val1.begin(), val1.end(), val1.begin(), ::tolower);
         transform(val2.begin(), val2.end(), val2.begin(), ::tolower);
+        cout << val1 << " vs " << val2 << endl;
         if (val1 == val2) return 100;
         return diceCoefficient(val1, val2)*100;
     }
